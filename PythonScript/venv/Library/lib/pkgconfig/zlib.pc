@@ -1,0 +1,13 @@
+prefix=C:/Users/Abhay/OneDrive/Desktop/Chrome Extension/Digest/PythonScript/venv/Library
+exec_prefix=C:/Users/Abhay/OneDrive/Desktop/Chrome Extension/Digest/PythonScript/venv/Library
+libdir=C:/Users/Abhay/OneDrive/Desktop/Chrome Extension/Digest/PythonScript/venv/Library/lib
+sharedlibdir=C:/Users/Abhay/OneDrive/Desktop/Chrome Extension/Digest/PythonScript/venv/Library/lib
+includedir=C:/Users/Abhay/OneDrive/Desktop/Chrome Extension/Digest/PythonScript/venv/Library/include
+
+Name: zlib
+Description: zlib compression library
+Version: 1.2.13
+
+Requires:
+Libs: -L${libdir} -L${sharedlibdir} -lz
+Cflags: -I${includedir}

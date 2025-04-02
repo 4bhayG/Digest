@@ -1,0 +1,13 @@
+{
+    "manifest_version" : 3 ,
+    "version" : "1.0.0" ,
+    "name" : "nextGist" ,
+    "action" : {
+        "default_popup" : "index.html"
+    } ,
+    "permissions" : ["storage" , "scripting" , "activeTab"] ,
+    "host_permissions" : [
+        "http://*/*" ,
+        "https://*/*"
+    ]
+}
