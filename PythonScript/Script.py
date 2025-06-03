@@ -1,44 +1,36 @@
-from dotenv import load_dotenv
-load_dotenv()  # Load all env variable
 import os
+from dotenv import load_dotenv
 from google import generativeai as genai
-
 from youtube_transcript_api import YouTubeTranscriptApi
-from urllib.parse import urlparse , parse_qs
+from urllib.parse import urlparse, parse_qs
 
-genai.configure(api_key=os.getenv("GoogleApiKey"))
+class YouTubeSummarizer:
+    def __init__(self, load_env=True):
+        if load_env:
+            load_dotenv()
+        self.api_key = os.getenv("GoogleApiKey")
+        if not self.api_key:
+            raise ValueError("GoogleApiKey not found in environment variables.")
+        genai.configure(api_key=self.api_key)
 
-print(os.getenv("GoogleApiKey"))
+        self.prompt = (
+            "You are a youtube video summarizer and you will be taking the transcript "
+            "text and summarizing the entire video and provide important summary in points "
+            "within 200 words. The transcript is as follows: "
+        )
+        self.model = genai.GenerativeModel("gemini-1.5-flash")
 
-prompt = "You are a youtube video summarizer and you will be taking the transcript text ans summarizing the entire vedio and provide important summary in points within 200 word. The transcript is as follows : "
+    def extract_transcript(self, video_url: str) -> str:
+        try:
+            query_params = parse_qs(urlparse(video_url).query)
+            video_id = query_params.get("v", [""])[0]
+            transcript_data = YouTubeTranscriptApi.get_transcript(video_id=video_id)
+            transcript = " ".join(entry["text"] for entry in transcript_data)
+            return transcript
+        except Exception as e:
+            raise RuntimeError(f"Error fetching transcript: {e}")
 
-## Getting transcript of video
-def extract_transcript(video_url):
-    try:
-        query_params = parse_qs(urlparse(video_url).query)
-        video_id = query_params.get("v", [""])[0]
-        transcript_text = YouTubeTranscriptApi.get_transcript(video_id=video_id)
-
-        transcript = ""
-        for i in transcript_text:
-            transcript += " "  +  i["text"]
-
-        return transcript
-
-    except Exception as e:
-        raise e
-
-def content_gemeini(transcript_text):
-    
-    model = genai.GenerativeModel("gemini-1.5-flash")
-    response = model.generate_content(prompt + transcript_text)
-    return response.text
-
-
-data = input("Enter Video Url: ");
-
-print(content_gemeini(extract_transcript(data)))
-    
-
-
-
+    def summarize_video(self, video_url: str) -> str:
+        transcript = self.extract_transcript(video_url)
+        response = self.model.generate_content(self.prompt + transcript)
+        return response.text
