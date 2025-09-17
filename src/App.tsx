@@ -1,6 +1,5 @@
 import  { useState } from "react";
 import './App.css';
-import  {ClipLoader}  from "react-spinners";
 
 function App() {
   const [summary, setSummary] = useState("");
@@ -59,7 +58,7 @@ function App() {
         Generate Summary
       </button>
 
-      {loading && <ClipLoader />}
+      {loading && <div className="loader"></div>}
 
       {error && <p className="text-red-600">Error: {error}</p>}
 

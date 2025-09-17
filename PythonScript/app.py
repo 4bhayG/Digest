@@ -13,6 +13,7 @@ def home():
 
 @app.route("/summarize", methods=["POST"])
 def summarize():
+    import traceback
     try:
         data = request.get_json()
 
@@ -24,6 +25,8 @@ def summarize():
         return jsonify({"summary": summary})
 
     except Exception as e:
+        print("Exception in /summarize endpoint:")
+        traceback.print_exc()
         return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
